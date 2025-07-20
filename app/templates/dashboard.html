@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Welcome, {{ current_user.username }}</h1>
+    {% if current_user.role in ['presenter', 'organizer'] %}
+    <a href="{{ url_for('upload') }}" class="btn btn-success">
+        <i class="bi bi-upload"></i> Upload Presentation
+    </a>
+    {% endif %}
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card stat-card text-white bg-primary">
+            <div class="card-body">
+                <h5 class="card-title">Presentations</h5>
+                <p class="display-4">{{ presentations|length }}</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card stat-card text-white bg-info">
+            <div class="card-body">
+                <h5 class="card-title">Quizzes</h5>
+                <p class="display-4">
+                    {% set total_quizzes = 0 %}
+                    {% for pres in presentations %}
+                        {% set total_quizzes = total_quizzes + pres.quizzes|length %}
+                    {% endfor %}
+                    {{ total_quizzes }}
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card stat-card text-white bg-warning">
+            <div class="card-body">
+                <h5 class="card-title">Responses</h5>
+                <p class="display-4">{{ current_user.responses|length }}</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card stat-card text-white bg-success">
+            <div class="card-body">
+                <h5 class="card-title">Accuracy</h5>
+                <p class="display-4">
+                    {% set correct = current_user.responses|selectattr('answer', 'equalto', 'quiz.answer')|list|length %}
+                    {% set total = current_user.responses|length %}
+                    {{ (correct / total * 100 if total > 0 else 0)|round(1) }}%
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h2 class="mb-3">Your Presentations</h2>
+{% if presentations %}
+<div class="list-group">
+    {% for pres in presentations %}
+    <a href="{{ url_for('presentation', id=pres.id) }}" class="list-group-item list-group-item-action">
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">{{ pres.title }}</h5>
+            <small>{{ pres.timestamp.strftime('%Y-%m-%d') }}</small>
+        </div>
+        <p class="mb-1">Presented by: {{ pres.presenter.username }}</p>
+        <small>{{ pres.quizzes|length }} quizzes</small>
+    </a>
+    {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-info">
+    No presentations available. 
+    {% if current_user.role in ['presenter', 'organizer'] %}
+    <a href="{{ url_for('upload') }}">Upload your first presentation</a>
+    {% else %}
+    You haven't been assigned to any presentations yet.
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}
