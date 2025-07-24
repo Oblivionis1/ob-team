@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block title %}生成题目 - PQ系统{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('content.index') }}">内容列表</a></li>
+            <li class="breadcrumb-item"><a href="{{ url_for('content.view', id=content.id) }}">{{ content.title }}</a></li>
+            <li class="breadcrumb-item active">生成题目</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">生成题目</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('questions.generate', content_id=content.id) }}">
+                        <div class="mb-3">
+                            <label for="num_questions" class="form-label">题目数量</label>
+                            <input type="number" class="form-control" id="num_questions" name="num_questions" 
+                                min="1" max="10" value="5" required>
+                            <div class="form-text">选择要生成的题目数量（1-10）</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="difficulty" class="form-label">难度级别</label>
+                            <select class="form-select" id="difficulty" name="difficulty" required>
+                                <option value="easy">简单</option>
+                                <option value="medium" selected>中等</option>
+                                <option value="hard">困难</option>
+                            </select>
+                        </div>
+                        
+                        <div class="alert alert-info">
+                            <h5 class="alert-heading"><i class="bi bi-info-circle"></i> 关于AI生成题目</h5>
+                            <p>系统将基于内容使用AI生成多选题。每道题目将包含：</p>
+                            <ul>
+                                <li>题干文本</li>
+                                <li>四个选项（一个正确答案和三个干扰项）</li>
+                                <li>详细解析</li>
+                            </ul>
+                            <p>生成的题目将自动保存，您可以在生成后编辑和修改它们。</p>
+                            <hr>
+                            <p class="mb-0">请注意，生成过程可能需要几秒钟时间。请耐心等待。</p>
+                        </div>
+                        
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{{ url_for('content.view', id=content.id) }}" class="btn btn-secondary me-md-2">返回</a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-magic"></i> 生成题目
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">内容摘要</h5>
+                </div>
+                <div class="card-body">
+                    <h5>{{ content.title }}</h5>
+                    <p>
+                        <span class="badge bg-secondary">{{ content.content_type }}</span>
+                        <span class="badge bg-success">{{ content.processing_status }}</span>
+                    </p>
+                    {% if content.description %}
+                    <p>{{ content.description }}</p>
+                    {% endif %}
+                    <div class="border p-2 bg-light" style="max-height: 200px; overflow-y: auto;">
+                        <small class="text-muted">{{ content.processed_text|truncate(500) }}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

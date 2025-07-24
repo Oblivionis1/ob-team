@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block title %}我的内容 - PQ系统{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>我的内容</h2>
+        <a href="{{ url_for('content.upload') }}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> 上传新内容
+        </a>
+    </div>
+
+    {% if contents %}
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>标题</th>
+                    <th>类型</th>
+                    <th>状态</th>
+                    <th>上传时间</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for content in contents %}
+                <tr>
+                    <td>{{ content.title }}</td>
+                    <td>
+                        {% if content.content_type == 'text' %}
+                            <span class="badge bg-info">文本</span>
+                        {% elif content.content_type == 'pdf' %}
+                            <span class="badge bg-danger">PDF</span>
+                        {% elif content.content_type == 'ppt' %}
+                            <span class="badge bg-warning">PPT</span>
+                        {% elif content.content_type == 'audio' %}
+                            <span class="badge bg-success">音频</span>
+                        {% elif content.content_type == 'video' %}
+                            <span class="badge bg-primary">视频</span>
+                        {% else %}
+                            <span class="badge bg-secondary">其他</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if content.processing_status == 'pending' %}
+                            <span class="badge bg-warning">待处理</span>
+                        {% elif content.processing_status == 'processing' %}
+                            <span class="badge bg-info">处理中</span>
+                        {% elif content.processing_status == 'completed' %}
+                            <span class="badge bg-success">已完成</span>
+                        {% elif content.processing_status == 'failed' %}
+                            <span class="badge bg-danger">处理失败</span>
+                        {% else %}
+                            <span class="badge bg-secondary">未知</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ content.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td>
+                        <div class="btn-group btn-group-sm">
+                            <a href="{{ url_for('content.view', id=content.id) }}" class="btn btn-outline-primary" title="查看详情">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <a href="{{ url_for('content.edit', id=content.id) }}" class="btn btn-outline-secondary" title="编辑">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a href="{{ url_for('content.download', id=content.id) }}" class="btn btn-outline-info" title="下载原文件">
+                                <i class="bi bi-download"></i>
+                            </a>
+                            <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ content.id }}" title="删除">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                            {% if content.processing_status == 'failed' %}
+                            <form action="{{ url_for('content.reprocess', id=content.id) }}" method="POST" class="d-inline">
+                                <button type="submit" class="btn btn-outline-warning" title="重新处理">
+                                    <i class="bi bi-arrow-repeat"></i>
+                                </button>
+                            </form>
+                            {% endif %}
+                        </div>
+
+                        <!-- 删除确认模态框 -->
+                        <div class="modal fade" id="deleteModal{{ content.id }}" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">确认删除</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        您确定要删除 <strong>{{ content.title }}</strong> 吗？此操作不可撤销。
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                                        <form action="{{ url_for('content.delete', id=content.id) }}" method="POST">
+                                            <button type="submit" class="btn btn-danger">删除</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle"></i> 您还没有上传任何内容。<a href="{{ url_for('content.upload') }}" class="alert-link">现在上传</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %} 

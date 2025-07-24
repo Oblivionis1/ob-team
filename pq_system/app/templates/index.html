@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PQ系统 - 智能题目生成平台</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .hero {
+            background-color: #f8f9fa;
+            padding: 5rem 0;
+            margin-bottom: 2rem;
+        }
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #0d6efd;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">PQ系统</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/">首页</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('content.index') }}">内容管理</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('questions.index') }}">题目</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('feedback.index') }}">反馈</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero text-center">
+        <div class="container">
+            <h1 class="display-4 fw-bold">智能题目生成系统</h1>
+            <p class="lead mb-4">从各种格式的内容自动生成高质量选择题，优化学习体验</p>
+            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                <a href="{{ url_for('main.start_using') }}" class="btn btn-primary btn-lg px-4 gap-3">开始使用</a>
+                <a href="{{ url_for('content.index') }}" class="btn btn-outline-secondary btn-lg px-4">管理内容</a>
+            </div>
+        </div>
+    </section>
+
+    <div class="container mb-5">
+        <div class="row g-4 py-5">
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <a href="{{ url_for('content.upload') }}" class="text-decoration-none text-dark">
+                        <div class="card-body text-center">
+                            <div class="feature-icon">📄</div>
+                            <h3>多格式输入处理</h3>
+                            <p>支持文本、PDF、PPT、音频和视频等多种格式，自动提取内容</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <a href="{{ url_for('questions.index') }}" class="text-decoration-none text-dark">
+                        <div class="card-body text-center">
+                            <div class="feature-icon">🤖</div>
+                            <h3>AI智能生成题目</h3>
+                            <p>利用人工智能技术，基于内容自动生成高质量选择题</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <a href="{{ url_for('feedback.index') }}" class="text-decoration-none text-dark">
+                        <div class="card-body text-center">
+                            <div class="feature-icon">📊</div>
+                            <h3>反馈收集与分析</h3>
+                            <p>收集用户反馈，持续提升内容质量和学习体验</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-light py-4">
+        <div class="container text-center">
+            <p>&copy; 2023 PQ系统 - 智能题目生成平台</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 

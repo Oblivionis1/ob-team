@@ -1,0 +1,226 @@
+{% extends 'base.html' %}
+
+{% block title %}提交反馈 - {{ content.title }} - PQ系统{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('content.index') }}">内容列表</a></li>
+            <li class="breadcrumb-item"><a href="{{ url_for('content.view', id=content.id) }}">{{ content.title }}</a></li>
+            <li class="breadcrumb-item active">提交反馈</li>
+        </ol>
+    </nav>
+
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">提交反馈 - {{ content.title }}</h4>
+        </div>
+        <div class="card-body">
+            <ul class="nav nav-tabs" id="feedbackTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="presenter-tab" data-bs-toggle="tab" data-bs-target="#presenter-tab-pane" type="button" role="tab">
+                        讲师反馈
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="question-tab" data-bs-toggle="tab" data-bs-target="#question-tab-pane" type="button" role="tab">
+                        题目反馈
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="environment-tab" data-bs-toggle="tab" data-bs-target="#environment-tab-pane" type="button" role="tab">
+                        环境反馈
+                    </button>
+                </li>
+            </ul>
+            
+            <div class="tab-content p-3 border border-top-0 rounded-bottom" id="feedbackTabsContent">
+                <!-- 讲师反馈 -->
+                <div class="tab-pane fade show active" id="presenter-tab-pane" role="tabpanel" aria-labelledby="presenter-tab" tabindex="0">
+                    <form method="POST" action="{{ url_for('feedback.create', content_id=content.id) }}">
+                        <input type="hidden" name="feedback_type" value="presenter">
+                        
+                        <div class="mb-3">
+                            <label class="form-label">演讲速度</label>
+                            <div class="d-flex align-items-center">
+                                <span class="me-2">太慢</span>
+                                <div class="btn-group" role="group" aria-label="演讲速度评分">
+                                    {% for i in range(1, 6) %}
+                                    <input type="radio" class="btn-check" name="pace_rating" id="pace{{ i }}" value="{{ i }}" {% if i == 3 %}checked{% endif %}>
+                                    <label class="btn btn-outline-primary" for="pace{{ i }}">{{ i }}</label>
+                                    {% endfor %}
+                                </div>
+                                <span class="ms-2">太快</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">清晰度</label>
+                            <div class="d-flex align-items-center">
+                                <span class="me-2">不清晰</span>
+                                <div class="btn-group" role="group" aria-label="清晰度评分">
+                                    {% for i in range(1, 6) %}
+                                    <input type="radio" class="btn-check" name="clarity_rating" id="clarity{{ i }}" value="{{ i }}" {% if i == 3 %}checked{% endif %}>
+                                    <label class="btn btn-outline-primary" for="clarity{{ i }}">{{ i }}</label>
+                                    {% endfor %}
+                                </div>
+                                <span class="ms-2">非常清晰</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">吸引力</label>
+                            <div class="d-flex align-items-center">
+                                <span class="me-2">乏味</span>
+                                <div class="btn-group" role="group" aria-label="吸引力评分">
+                                    {% for i in range(1, 6) %}
+                                    <input type="radio" class="btn-check" name="engagement_rating" id="engagement{{ i }}" value="{{ i }}" {% if i == 3 %}checked{% endif %}>
+                                    <label class="btn btn-outline-primary" for="engagement{{ i }}">{{ i }}</label>
+                                    {% endfor %}
+                                </div>
+                                <span class="ms-2">非常吸引人</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="presenter-comment" class="form-label">评论（可选）</label>
+                            <textarea class="form-control" id="presenter-comment" name="comment" rows="3" placeholder="请输入对讲师的评论或建议..."></textarea>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">提交讲师反馈</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- 题目反馈 -->
+                <div class="tab-pane fade" id="question-tab-pane" role="tabpanel" aria-labelledby="question-tab" tabindex="0">
+                    <form method="POST" action="{{ url_for('feedback.create', content_id=content.id) }}">
+                        <input type="hidden" name="feedback_type" value="question">
+                        
+                        <div class="mb-3">
+                            <label for="question_id" class="form-label">选择题目</label>
+                            <select class="form-select" id="question_id" name="question_id" required>
+                                <option value="" selected disabled>请选择要评价的题目</option>
+                                {% for question in questions %}
+                                <option value="{{ question.id }}">{{ question.text|truncate(50) }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">难度</label>
+                            <div class="d-flex align-items-center">
+                                <span class="me-2">太简单</span>
+                                <div class="btn-group" role="group" aria-label="难度评分">
+                                    {% for i in range(1, 6) %}
+                                    <input type="radio" class="btn-check" name="difficulty_rating" id="difficulty{{ i }}" value="{{ i }}" {% if i == 3 %}checked{% endif %}>
+                                    <label class="btn btn-outline-primary" for="difficulty{{ i }}">{{ i }}</label>
+                                    {% endfor %}
+                                </div>
+                                <span class="ms-2">太难</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">相关性</label>
+                            <div class="d-flex align-items-center">
+                                <span class="me-2">不相关</span>
+                                <div class="btn-group" role="group" aria-label="相关性评分">
+                                    {% for i in range(1, 6) %}
+                                    <input type="radio" class="btn-check" name="relevance_rating" id="relevance{{ i }}" value="{{ i }}" {% if i == 3 %}checked{% endif %}>
+                                    <label class="btn btn-outline-primary" for="relevance{{ i }}">{{ i }}</label>
+                                    {% endfor %}
+                                </div>
+                                <span class="ms-2">非常相关</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">质量</label>
+                            <div class="d-flex align-items-center">
+                                <span class="me-2">质量低</span>
+                                <div class="btn-group" role="group" aria-label="质量评分">
+                                    {% for i in range(1, 6) %}
+                                    <input type="radio" class="btn-check" name="quality_rating" id="quality{{ i }}" value="{{ i }}" {% if i == 3 %}checked{% endif %}>
+                                    <label class="btn btn-outline-primary" for="quality{{ i }}">{{ i }}</label>
+                                    {% endfor %}
+                                </div>
+                                <span class="ms-2">质量高</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="question-comment" class="form-label">评论（可选）</label>
+                            <textarea class="form-control" id="question-comment" name="comment" rows="3" placeholder="请输入对题目的评论或建议..."></textarea>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">提交题目反馈</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- 环境反馈 -->
+                <div class="tab-pane fade" id="environment-tab-pane" role="tabpanel" aria-labelledby="environment-tab" tabindex="0">
+                    <form method="POST" action="{{ url_for('feedback.create', content_id=content.id) }}">
+                        <input type="hidden" name="feedback_type" value="environment">
+                        
+                        <div class="mb-3">
+                            <label class="form-label">教室环境</label>
+                            <div class="d-flex align-items-center">
+                                <span class="me-2">很差</span>
+                                <div class="btn-group" role="group" aria-label="环境评分">
+                                    {% for i in range(1, 6) %}
+                                    <input type="radio" class="btn-check" name="environment_rating" id="environment{{ i }}" value="{{ i }}" {% if i == 3 %}checked{% endif %}>
+                                    <label class="btn btn-outline-primary" for="environment{{ i }}">{{ i }}</label>
+                                    {% endfor %}
+                                </div>
+                                <span class="ms-2">很好</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">音频质量</label>
+                            <div class="d-flex align-items-center">
+                                <span class="me-2">很差</span>
+                                <div class="btn-group" role="group" aria-label="音频评分">
+                                    {% for i in range(1, 6) %}
+                                    <input type="radio" class="btn-check" name="audio_rating" id="audio{{ i }}" value="{{ i }}" {% if i == 3 %}checked{% endif %}>
+                                    <label class="btn btn-outline-primary" for="audio{{ i }}">{{ i }}</label>
+                                    {% endfor %}
+                                </div>
+                                <span class="ms-2">很好</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">视觉效果</label>
+                            <div class="d-flex align-items-center">
+                                <span class="me-2">很差</span>
+                                <div class="btn-group" role="group" aria-label="视觉评分">
+                                    {% for i in range(1, 6) %}
+                                    <input type="radio" class="btn-check" name="visual_rating" id="visual{{ i }}" value="{{ i }}" {% if i == 3 %}checked{% endif %}>
+                                    <label class="btn btn-outline-primary" for="visual{{ i }}">{{ i }}</label>
+                                    {% endfor %}
+                                </div>
+                                <span class="ms-2">很好</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="environment-comment" class="form-label">评论（可选）</label>
+                            <textarea class="form-control" id="environment-comment" name="comment" rows="3" placeholder="请输入对环境的评论或建议..."></textarea>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">提交环境反馈</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

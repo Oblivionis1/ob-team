@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ content.title }} - PQ系统{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ url_for('content.index') }}">内容列表</a></li>
+                    <li class="breadcrumb-item active">{{ content.title }}</li>
+                </ol>
+            </nav>
+            
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">内容详情</h4>
+                    <div>
+                        <a href="{{ url_for('content.edit', id=content.id) }}" class="btn btn-sm btn-light me-2">
+                            <i class="bi bi-pencil"></i> 编辑
+                        </a>
+                        <a href="{{ url_for('content.download', id=content.id) }}" class="btn btn-sm btn-light">
+                            <i class="bi bi-download"></i> 下载原文件
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ content.title }}</h5>
+                    
+                    <div class="d-flex mb-3">
+                        <span class="badge bg-secondary me-2">{{ content.content_type }}</span>
+                        <span class="badge {% if content.processing_status == 'completed' %}bg-success{% elif content.processing_status == 'failed' %}bg-danger{% else %}bg-warning{% endif %}">
+                            {{ content.processing_status }}
+                        </span>
+                    </div>
+                    
+                    {% if content.description %}
+                    <p class="card-text">{{ content.description }}</p>
+                    <hr>
+                    {% endif %}
+                    
+                    <div class="mb-3">
+                        <small class="text-muted">
+                            上传时间: {{ content.created_at.strftime('%Y-%m-%d %H:%M') }}<br>
+                            原始文件: {{ content.original_filename }}
+                        </small>
+                    </div>
+                    
+                    {% if content.processing_status == 'failed' %}
+                    <div class="alert alert-danger">
+                        <h5 class="alert-heading">处理失败</h5>
+                        <p>{{ content.processing_error or '未知错误' }}</p>
+                        <hr>
+                        <form action="{{ url_for('content.reprocess', id=content.id) }}" method="POST">
+                            <button type="submit" class="btn btn-warning">重新处理</button>
+                        </form>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            {% if content.processing_status == 'completed' %}
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">处理后的内容</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{{ url_for('questions.generate', content_id=content.id) }}" class="btn btn-primary">
+                                <i class="bi bi-lightbulb"></i> 生成题目
+                            </a>
+                        </div>
+                    </div>
+                    <div class="border p-3 bg-light" style="max-height: 500px; overflow-y: auto;">
+                        <pre class="mb-0" style="white-space: pre-wrap;">{{ content.processed_text }}</pre>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">相关题目</h5>
+                </div>
+                <div class="card-body">
+                    {% set questions = content.questions.all() %}
+                    {% if questions %}
+                    <ul class="list-group">
+                        {% for question in questions %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>{{ question.text|truncate(50) }}</div>
+                            <a href="{{ url_for('questions.view', id=question.id) }}" class="btn btn-sm btn-outline-primary">查看</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p class="card-text text-muted">
+                        此内容尚未生成题目。
+                        {% if content.processing_status == 'completed' %}
+                        <a href="{{ url_for('questions.generate', content_id=content.id) }}" class="btn btn-sm btn-primary mt-2">立即生成题目</a>
+                        {% endif %}
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0">测验</h5>
+                </div>
+                <div class="card-body">
+                    {% set quizzes = content.quizzes.all() %}
+                    {% if quizzes %}
+                    <ul class="list-group">
+                        {% for quiz in quizzes %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>{{ quiz.title }}</div>
+                            <a href="{{ url_for('quizzes.view', id=quiz.id) }}" class="btn btn-sm btn-outline-primary">查看</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p class="card-text text-muted">
+                        此内容尚未创建测验。
+                        {% if content.questions.count() > 0 %}
+                        <a href="{{ url_for('quizzes.create', content_id=content.id) }}" class="btn btn-sm btn-primary mt-2">创建测验</a>
+                        {% endif %}
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% block title %}上传内容 - PQ系统{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">上传内容</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('content.upload') }}" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="title" class="form-label">标题 <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="title" name="title" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="description" class="form-label">描述</label>
+                            <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="content_type" class="form-label">内容类型 <span class="text-danger">*</span></label>
+                            <select class="form-select" id="content_type" name="content_type" required>
+                                <option value="" selected disabled>选择内容类型</option>
+                                <option value="text">文本 (.txt, .md, .rtf)</option>
+                                <option value="pdf">PDF文档 (.pdf)</option>
+                                <option value="ppt">演示文稿 (.ppt, .pptx)</option>
+                                <option value="audio">音频 (.mp3, .wav, .ogg, .flac)</option>
+                                <option value="video">视频 (.mp4, .avi, .mov, .mkv)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="file" class="form-label">文件 <span class="text-danger">*</span></label>
+                            <input type="file" class="form-control" id="file" name="file" required>
+                            <div class="form-text">
+                                支持的文件格式：
+                                <ul class="mt-2">
+                                    <li>文本: .txt, .md, .rtf</li>
+                                    <li>PDF: .pdf</li>
+                                    <li>演示文稿: .ppt, .pptx</li>
+                                    <li>音频: .mp3, .wav, .ogg, .flac</li>
+                                    <li>视频: .mp4, .avi, .mov, .mkv</li>
+                                </ul>
+                                <div class="alert alert-info mt-3">
+                                    <i class="bi bi-info-circle"></i> 文件大小限制: 32MB
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{{ url_for('content.index') }}" class="btn btn-secondary">取消</a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-upload"></i> 上传内容
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // 根据选择的内容类型，验证文件扩展名
+    const contentTypeSelect = document.getElementById('content_type');
+    const fileInput = document.getElementById('file');
+    
+    contentTypeSelect.addEventListener('change', function() {
+        fileInput.value = ''; // 清除已选择的文件
+    });
+    
+    fileInput.addEventListener('change', function() {
+        const file = this.files[0];
+        if (!file) return;
+        
+        const filename = file.name;
+        const extension = filename.split('.').pop().toLowerCase();
+        
+        let isValid = false;
+        const selectedType = contentTypeSelect.value;
+        
+        switch(selectedType) {
+            case 'text':
+                isValid = ['txt', 'md', 'rtf'].includes(extension);
+                break;
+            case 'pdf':
+                isValid = ['pdf'].includes(extension);
+                break;
+            case 'ppt':
+                isValid = ['ppt', 'pptx'].includes(extension);
+                break;
+            case 'audio':
+                isValid = ['mp3', 'wav', 'ogg', 'flac'].includes(extension);
+                break;
+            case 'video':
+                isValid = ['mp4', 'avi', 'mov', 'mkv'].includes(extension);
+                break;
+            default:
+                isValid = false;
+        }
+        
+        if (!isValid) {
+            alert(`所选文件类型 (.${extension}) 与所选内容类型 (${selectedType}) 不匹配。`);
+            this.value = '';
+        }
+    });
+});
+</script>
+{% endblock %} 

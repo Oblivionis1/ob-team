@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+
+{% block title %}反馈列表 - PQ系统{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>反馈列表</h2>
+        <a href="{{ url_for('content.index') }}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> 查看内容并添加反馈
+        </a>
+    </div>
+
+    {% if feedbacks %}
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>类型</th>
+                    <th>内容</th>
+                    <th>评分</th>
+                    <th>评论</th>
+                    <th>提交时间</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for feedback in feedbacks %}
+                <tr>
+                    <td>
+                        {% if feedback.feedback_type == 'presenter' %}
+                            <span class="badge bg-primary">讲师反馈</span>
+                        {% elif feedback.feedback_type == 'question' %}
+                            <span class="badge bg-info">题目反馈</span>
+                        {% elif feedback.feedback_type == 'environment' %}
+                            <span class="badge bg-success">环境反馈</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if feedback.content %}
+                            <a href="{{ url_for('content.view', id=feedback.content_id) }}">{{ feedback.content.title|truncate(30) }}</a>
+                        {% else %}
+                            <span class="text-muted">未知内容</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if feedback.feedback_type == 'presenter' %}
+                            速度: {{ feedback.pace_rating }}/5<br>
+                            清晰度: {{ feedback.clarity_rating }}/5<br>
+                            吸引力: {{ feedback.engagement_rating }}/5
+                        {% elif feedback.feedback_type == 'question' %}
+                            难度: {{ feedback.difficulty_rating }}/5<br>
+                            相关性: {{ feedback.relevance_rating }}/5<br>
+                            质量: {{ feedback.quality_rating }}/5
+                        {% elif feedback.feedback_type == 'environment' %}
+                            环境: {{ feedback.environment_rating }}/5<br>
+                            音频: {{ feedback.audio_rating }}/5<br>
+                            视觉: {{ feedback.visual_rating }}/5
+                        {% endif %}
+                    </td>
+                    <td>{{ feedback.comment|truncate(30) or '无评论' }}</td>
+                    <td>{{ feedback.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td>
+                        <div class="btn-group btn-group-sm">
+                            <a href="{{ url_for('feedback.view', id=feedback.id) }}" class="btn btn-outline-primary" title="查看详情">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ feedback.id }}" title="删除">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+
+                        <!-- 删除确认模态框 -->
+                        <div class="modal fade" id="deleteModal{{ feedback.id }}" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">确认删除</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        您确定要删除这条反馈吗？此操作不可撤销。
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                                        <form action="{{ url_for('feedback.delete', id=feedback.id) }}" method="POST">
+                                            <button type="submit" class="btn btn-danger">删除</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle"></i> 暂无反馈。
+        <a href="{{ url_for('content.index') }}" class="alert-link">浏览内容并添加反馈</a>
+    </div>
+    {% endif %}
+
+    <div class="mt-4">
+        <h3>反馈统计</h3>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">讲师反馈</div>
+                    <div class="card-body">
+                        {% set presenter_count = feedbacks|selectattr('feedback_type', 'equalto', 'presenter')|list|length %}
+                        <p>共 {{ presenter_count }} 条讲师反馈</p>
+                        {% if presenter_count > 0 %}
+                        <a href="{{ url_for('content.index') }}" class="btn btn-sm btn-outline-primary">查看详细统计</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header bg-info text-white">题目反馈</div>
+                    <div class="card-body">
+                        {% set question_count = feedbacks|selectattr('feedback_type', 'equalto', 'question')|list|length %}
+                        <p>共 {{ question_count }} 条题目反馈</p>
+                        {% if question_count > 0 %}
+                        <a href="{{ url_for('questions.index') }}" class="btn btn-sm btn-outline-info">查看题目</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header bg-success text-white">环境反馈</div>
+                    <div class="card-body">
+                        {% set env_count = feedbacks|selectattr('feedback_type', 'equalto', 'environment')|list|length %}
+                        <p>共 {{ env_count }} 条环境反馈</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

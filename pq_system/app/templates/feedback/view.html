@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+
+{% block title %}反馈详情 - PQ系统{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('feedback.index') }}">反馈列表</a></li>
+            <li class="breadcrumb-item active">反馈详情</li>
+        </ol>
+    </nav>
+
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">
+                {% if feedback.feedback_type == 'presenter' %}
+                    讲师反馈
+                {% elif feedback.feedback_type == 'question' %}
+                    题目反馈
+                {% elif feedback.feedback_type == 'environment' %}
+                    环境反馈
+                {% endif %}
+            </h4>
+            <form action="{{ url_for('feedback.delete', id=feedback.id) }}" method="POST" onsubmit="return confirm('确定要删除此反馈吗？');">
+                <button type="submit" class="btn btn-light btn-sm">
+                    <i class="bi bi-trash"></i> 删除
+                </button>
+            </form>
+        </div>
+        <div class="card-body">
+            <div class="mb-4">
+                <h5>内容信息</h5>
+                <p>
+                    <strong>内容标题：</strong>
+                    {% if content %}
+                        <a href="{{ url_for('content.view', id=content.id) }}">{{ content.title }}</a>
+                    {% else %}
+                        未知内容
+                    {% endif %}
+                </p>
+                <p><strong>提交时间：</strong> {{ feedback.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
+            </div>
+            
+            <div class="mb-4">
+                <h5>评分详情</h5>
+                <div class="row">
+                    {% if feedback.feedback_type == 'presenter' %}
+                        <div class="col-md-4">
+                            <div class="card mb-3">
+                                <div class="card-body text-center">
+                                    <h6>演讲速度</h6>
+                                    <div class="display-4">{{ feedback.pace_rating }}/5</div>
+                                    <small class="text-muted">1=太慢，3=适中，5=太快</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card mb-3">
+                                <div class="card-body text-center">
+                                    <h6>清晰度</h6>
+                                    <div class="display-4">{{ feedback.clarity_rating }}/5</div>
+                                    <small class="text-muted">1=不清晰，5=非常清晰</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card mb-3">
+                                <div class="card-body text-center">
+                                    <h6>吸引力</h6>
+                                    <div class="display-4">{{ feedback.engagement_rating }}/5</div>
+                                    <small class="text-muted">1=乏味，5=非常吸引人</small>
+                                </div>
+                            </div>
+                        </div>
+                    {% elif feedback.feedback_type == 'question' %}
+                        <div class="col-md-4">
+                            <div class="card mb-3">
+                                <div class="card-body text-center">
+                                    <h6>难度</h6>
+                                    <div class="display-4">{{ feedback.difficulty_rating }}/5</div>
+                                    <small class="text-muted">1=太简单，3=适中，5=太难</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card mb-3">
+                                <div class="card-body text-center">
+                                    <h6>相关性</h6>
+                                    <div class="display-4">{{ feedback.relevance_rating }}/5</div>
+                                    <small class="text-muted">1=不相关，5=非常相关</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card mb-3">
+                                <div class="card-body text-center">
+                                    <h6>质量</h6>
+                                    <div class="display-4">{{ feedback.quality_rating }}/5</div>
+                                    <small class="text-muted">1=质量低，5=质量高</small>
+                                </div>
+                            </div>
+                        </div>
+                    {% elif feedback.feedback_type == 'environment' %}
+                        <div class="col-md-4">
+                            <div class="card mb-3">
+                                <div class="card-body text-center">
+                                    <h6>环境</h6>
+                                    <div class="display-4">{{ feedback.environment_rating }}/5</div>
+                                    <small class="text-muted">1=很差，5=很好</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card mb-3">
+                                <div class="card-body text-center">
+                                    <h6>音频质量</h6>
+                                    <div class="display-4">{{ feedback.audio_rating }}/5</div>
+                                    <small class="text-muted">1=很差，5=很好</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card mb-3">
+                                <div class="card-body text-center">
+                                    <h6>视觉效果</h6>
+                                    <div class="display-4">{{ feedback.visual_rating }}/5</div>
+                                    <small class="text-muted">1=很差，5=很好</small>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            {% if feedback.comment %}
+            <div class="mb-4">
+                <h5>评论</h5>
+                <div class="p-3 border rounded bg-light">
+                    {{ feedback.comment }}
+                </div>
+            </div>
+            {% endif %}
+            
+            <div class="mt-4">
+                <a href="{{ url_for('feedback.index') }}" class="btn btn-primary">返回列表</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
