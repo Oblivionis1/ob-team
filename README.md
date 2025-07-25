@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 # PQ System
 
 PQ System is a comprehensive solution for generating quiz questions from educational content. It supports processing text, PowerPoint, PDF, audio, and video inputs to extract content and automatically generate multiple-choice questions for educational use.
@@ -52,6 +53,8 @@ PQ System is a comprehensive solution for generating quiz questions from educati
 
 1. Clone the repository:
 =======
+=======
+>>>>>>> 96ff40a216536651726503bfe337a933f7765958
 # PQ 系统
 
 PQ 系统是一个综合性解决方案，用于从教育内容生成测验题目。它支持处理文本、PowerPoint、PDF、音频和视频输入，自动提取内容并为教育用途生成多项选择题。
@@ -104,6 +107,9 @@ PQ 系统是一个综合性解决方案，用于从教育内容生成测验题�
 ### 安装步骤
 
 1. 克隆仓库：
+<<<<<<< HEAD
+>>>>>>> 96ff40a216536651726503bfe337a933f7765958
+=======
 >>>>>>> 96ff40a216536651726503bfe337a933f7765958
 
 ```bash
@@ -111,6 +117,7 @@ git clone https://github.com/yourusername/pq_system.git
 cd pq_system
 ```
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 2. Create a virtual environment:
 
@@ -121,6 +128,8 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 
 3. Install the requirements:
 =======
+=======
+>>>>>>> 96ff40a216536651726503bfe337a933f7765958
 2. 创建虚拟环境：
 
 ```bash
@@ -129,6 +138,9 @@ source venv/bin/activate  # Windows系统: venv\Scripts\activate
 ```
 
 3. 安装依赖包：
+<<<<<<< HEAD
+>>>>>>> 96ff40a216536651726503bfe337a933f7765958
+=======
 >>>>>>> 96ff40a216536651726503bfe337a933f7765958
 
 ```bash
@@ -136,7 +148,11 @@ pip install -r requirements.txt
 ```
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 4. Set up environment variables (create a `.env` file in the root directory):
+=======
+4. 设置环境变量（在根目录创建 `.env` 文件）：
+>>>>>>> 96ff40a216536651726503bfe337a933f7765958
 =======
 4. 设置环境变量（在根目录创建 `.env` 文件）：
 >>>>>>> 96ff40a216536651726503bfe337a933f7765958
@@ -149,7 +165,11 @@ OPENAI_API_KEY=your-openai-api-key
 ```
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 5. Initialize the database:
+=======
+5. 初始化数据库：
+>>>>>>> 96ff40a216536651726503bfe337a933f7765958
 =======
 5. 初始化数据库：
 >>>>>>> 96ff40a216536651726503bfe337a933f7765958
@@ -161,9 +181,15 @@ flask db upgrade
 ```
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 ## Usage
 
 1. Start the application:
+=======
+## 使用说明
+
+1. 启动应用：
+>>>>>>> 96ff40a216536651726503bfe337a933f7765958
 =======
 ## 使用说明
 
@@ -174,6 +200,7 @@ flask db upgrade
 python main.py --debug
 ```
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 2. Access the web interface:
    - Open your browser and go to `http://localhost:5000`
@@ -234,6 +261,8 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 This project is licensed under the MIT License - see the LICENSE file for details. 
 =======
+=======
+>>>>>>> 96ff40a216536651726503bfe337a933f7765958
 2. 访问 Web 界面：
    - 打开浏览器访问 `http://localhost:5000`
 
@@ -292,4 +321,7 @@ pq_system/
 ## 许可证
 
 本项目采用 MIT 许可证 - 详见 LICENSE 文件。
+<<<<<<< HEAD
+>>>>>>> 96ff40a216536651726503bfe337a933f7765958
+=======
 >>>>>>> 96ff40a216536651726503bfe337a933f7765958
