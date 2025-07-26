@@ -1,0 +1,59 @@
+2025-07-26 02:45:05,863 [INFO] 应用使用的数据库路径: D:\exam\pq_system\instance\pq_system.db
+2025-07-26 02:45:05,896 [INFO] 使用的数据库URI: sqlite:///D:\exam\pq_system\instance\pq_system.db
+2025-07-26 02:45:05,896 [INFO] 数据库绝对路径: D:\exam\pq_system\instance\pq_system.db
+2025-07-26 02:45:05,900 [INFO] 数据库表已创建
+2025-07-26 02:45:06,550 [ERROR] API调用失败: 400 Client Error: Bad Request for url: https://api.deepseek.com/v1/chat/completions
+2025-07-26 02:45:06,551 [ERROR] 生成问题时出错: 400 Client Error: Bad Request for url: https://api.deepseek.com/v1/chat/completions
+Traceback (most recent call last):
+  File "D:\exam\pq_system\question_generator\generator.py", line 68, in generate_questions
+    response = self._call_api(prompt)
+  File "D:\exam\pq_system\question_generator\generator.py", line 142, in _call_api
+    response.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\users\zhuanz\appdata\local\programs\python\python313\Lib\site-packages\requests\models.py", line 1024, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.deepseek.com/v1/chat/completions
+2025-07-26 02:45:06,580 [WARNING] 生成问题失败 (尝试 1/3): 400 Client Error: Bad Request for url: https://api.deepseek.com/v1/chat/completions
+2025-07-26 02:45:08,792 [ERROR] API调用失败: 400 Client Error: Bad Request for url: https://api.deepseek.com/v1/chat/completions
+2025-07-26 02:45:08,792 [ERROR] 生成问题时出错: 400 Client Error: Bad Request for url: https://api.deepseek.com/v1/chat/completions
+Traceback (most recent call last):
+  File "D:\exam\pq_system\question_generator\generator.py", line 68, in generate_questions
+    response = self._call_api(prompt)
+  File "D:\exam\pq_system\question_generator\generator.py", line 142, in _call_api
+    response.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\users\zhuanz\appdata\local\programs\python\python313\Lib\site-packages\requests\models.py", line 1024, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.deepseek.com/v1/chat/completions
+2025-07-26 02:45:08,795 [WARNING] 生成问题失败 (尝试 2/3): 400 Client Error: Bad Request for url: https://api.deepseek.com/v1/chat/completions
+2025-07-26 02:45:11,267 [ERROR] API调用失败: 400 Client Error: Bad Request for url: https://api.deepseek.com/v1/chat/completions
+2025-07-26 02:45:11,269 [ERROR] 生成问题时出错: 400 Client Error: Bad Request for url: https://api.deepseek.com/v1/chat/completions
+Traceback (most recent call last):
+  File "D:\exam\pq_system\question_generator\generator.py", line 68, in generate_questions
+    response = self._call_api(prompt)
+  File "D:\exam\pq_system\question_generator\generator.py", line 142, in _call_api
+    response.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "c:\users\zhuanz\appdata\local\programs\python\python313\Lib\site-packages\requests\models.py", line 1024, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: https://api.deepseek.com/v1/chat/completions
+2025-07-26 02:45:11,274 [WARNING] 生成问题失败 (尝试 3/3): 400 Client Error: Bad Request for url: https://api.deepseek.com/v1/chat/completions
+2025-07-26 02:45:13,275 [ERROR] 生成问题失败: 在 3 次尝试后仍无法生成问题
+Traceback (most recent call last):
+  File "D:\exam\pq_system\question_generator\__init__.py", line 49, in generate_questions
+    questions = generator.generate_questions_with_retry(
+        text=content_text,
+        num_questions=num_questions,
+        difficulty=difficulty
+    )
+  File "D:\exam\pq_system\question_generator\generator.py", line 207, in generate_questions_with_retry
+    raise RuntimeError(f"在 {max_retries} 次尝试后仍无法生成问题")
+RuntimeError: 在 3 次尝试后仍无法生成问题
+2025-07-26 02:45:54,366 [INFO] 应用使用的数据库路径: D:\exam\pq_system\instance\pq_system.db
+2025-07-26 02:45:54,382 [INFO] 使用的数据库URI: sqlite:///D:\exam\pq_system\instance\pq_system.db
+2025-07-26 02:45:54,383 [INFO] 数据库绝对路径: D:\exam\pq_system\instance\pq_system.db
+2025-07-26 02:45:54,386 [INFO] 数据库表已创建
+2025-07-26 02:47:00,124 [INFO] 应用使用的数据库路径: D:\exam\pq_system\instance\pq_system.db
+2025-07-26 02:47:00,152 [INFO] 使用的数据库URI: sqlite:///D:\exam\pq_system\instance\pq_system.db
+2025-07-26 02:47:00,153 [INFO] 数据库绝对路径: D:\exam\pq_system\instance\pq_system.db
+2025-07-26 02:47:00,156 [INFO] 数据库表已创建

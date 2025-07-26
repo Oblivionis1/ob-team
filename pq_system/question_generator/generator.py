@@ -132,13 +132,19 @@ class QuestionGenerator:
         }
         
         data = {
-            "model": self.model,
+            "model": "deepseek-chat",  # Use the correct model name for DeepSeek
             "messages": [{"role": "user", "content": prompt}],
-            "temperature": 0.7
+            "temperature": 0.7,
+            "max_tokens": 2000  # Add max tokens limit
         }
         
         try:
-            response = requests.post(url, headers=headers, json=data)
+            response = requests.post(url, headers=headers, json=data, timeout=60)  # Add timeout
+            
+            # Log the response for debugging
+            if response.status_code != 200:
+                logging.error(f"API错误响应: {response.status_code} - {response.text}")
+            
             response.raise_for_status()
             
             result = response.json()

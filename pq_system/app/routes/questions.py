@@ -15,8 +15,9 @@ def index():
     """列出所有问题"""
     # 获取所有问题
     questions = Question.query.all()
-    
-    return render_template('questions/index.html', questions=questions)
+    # 获取所有内容
+    contents = Content.query.all()
+    return render_template('questions/index.html', questions=questions, contents=contents)
 
 @questions_bp.route('/generate/<int:content_id>', methods=['GET', 'POST'])
 def generate(content_id):
